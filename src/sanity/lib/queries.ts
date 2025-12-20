@@ -11,7 +11,7 @@ export const pagesQuery = groq`
 `
 
 export const pageQuery = groq`
-  *[_type == "page" && slug.current == $slug][0] {
+    *[_type == "page" && slug.current == $slug][0] {
     _id,
     _type,
     title,
@@ -23,12 +23,24 @@ export const pageQuery = groq`
         image {
           ...,
           asset-> {
-            ...,
             metadata {
               dimensions
             }
           }
         }
+      },
+      _type == "section" => {
+        ...
+      }
+    }
+  }
+`
+
+export const homePageQuery = groq`
+  *[_id == "siteSettings"][0]{
+    homePage->{
+      content[] {
+        ...,
       }
     }
   }

@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils/cn";
 import Link from "next/link";
 
-  type ButtonProps = {
+type ButtonProps = {
   label: string;
   url: string;
   variant: "primary" | "outline";

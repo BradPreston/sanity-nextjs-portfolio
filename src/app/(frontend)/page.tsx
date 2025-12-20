@@ -1,20 +1,25 @@
-import { client } from "@/sanity/lib/client"
-import { pagesQuery } from "@/sanity/lib/queries"
-import { Page } from "@/sanity/types"
-import Link from "next/link"
+import Hero from "@/components/blocks/hero";
+import Section from "@/components/blocks/section";
+import { sanityFetch } from "@/sanity/lib/live";
+import { homePageQuery } from "@/sanity/lib/queries";
 
 export default async function Page() {
-  const pages = await client.fetch(pagesQuery)
-  return (
-    <div className="container mx-auto bg-dark text-light">
-      <h1>Pages</h1>
-      <ul>
-        {pages.map((page: Page) => (
-          <li key={page._id}>
-            <Link href={page.slug?.current ?? ""}>{page.title}</Link>
-          </li>
-        ))}
-      </ul>
+  const { data: page } = await sanityFetch({
+    query: homePageQuery,
+  });
+
+  return page?.homePage?.content ? (
+    <div className="container flex flex-col mx-auto max-w-[800px] bg-dark text-light gap-24 py-16">
+      {page.homePage.content?.map((block: any) => {
+        switch (block._type) {
+          case "hero":
+            return <Hero key={block._key} {...block} />
+          case "section":
+            return <Section key={block._key} {...block} />
+          default:
+            return null
+        }
+      })}
     </div>
-  )
+  ) : null;
 }

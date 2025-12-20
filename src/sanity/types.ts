@@ -13,6 +13,56 @@
  */
 
 // Source: schema.json
+export type Checklist = {
+  _type: "checklist";
+  items?: Array<{
+    title?: string;
+    proficiency?: "Proficient" | "Familiar";
+    _key: string;
+  }>;
+};
+
+export type Section = {
+  _type: "section";
+  title?: string;
+  content?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    _key: string;
+  } & Checklist | {
+    _key: string;
+  } & Button>;
+};
+
+export type SiteSettings = {
+  _id: string;
+  _type: "siteSettings";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  homePage?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "page";
+  };
+};
+
 export type Button = {
   _type: "button";
   label?: string;
@@ -69,7 +119,9 @@ export type Page = {
     _key: string;
   } | {
     _key: string;
-  } & Hero>;
+  } & Hero | {
+    _key: string;
+  } & Section>;
 };
 
 export type SanityImageCrop = {
@@ -190,7 +242,7 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type AllSanitySchemaTypes = Button | Hero | Page | SanityImageCrop | SanityImageHotspot | Slug | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
+export type AllSanitySchemaTypes = Checklist | Section | SiteSettings | Button | Hero | Page | SanityImageCrop | SanityImageHotspot | Slug | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./src/sanity/lib/queries.ts
 // Variable: pagesQuery
@@ -203,6 +255,8 @@ export type PagesQueryResult = Array<{
   content: Array<{
     _key: string;
   } & Hero | {
+    _key: string;
+  } & Section | {
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -222,15 +276,13 @@ export type PagesQueryResult = Array<{
   }> | null;
 }>;
 // Variable: pageQuery
-// Query: *[_type == "page" && slug.current == $slug][0] {    _id,    _type,    title,    slug,    content  }
+// Query: *[_type == "page" && slug.current == $slug][0] {    _id,    _type,    title,    slug,    content[] {      ...,      _type == "hero" => {        ...,        image {          ...,          asset-> {            metadata {              dimensions            }          }        }      },      _type == "section" => {        ...      }    }  }
 export type PageQueryResult = {
   _id: string;
   _type: "page";
   title: string | null;
   slug: Slug | null;
   content: Array<{
-    _key: string;
-  } & Hero | {
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -247,7 +299,124 @@ export type PageQueryResult = {
     level?: number;
     _type: "block";
     _key: string;
+  } | {
+    _key: string;
+    _type: "hero";
+    title?: string;
+    description?: string;
+    image: {
+      asset: {
+        metadata: {
+          dimensions: SanityImageDimensions | null;
+        } | null;
+      } | null;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    } | null;
+    buttons?: Array<{
+      _key: string;
+    } & Button>;
+  } | {
+    _key: string;
+    _type: "section";
+    title?: string;
+    content?: Array<{
+      _key: string;
+    } & Button | {
+      _key: string;
+    } & Checklist | {
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+      listItem?: "bullet" | "number";
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }>;
   }> | null;
+} | null;
+// Variable: homePageQuery
+// Query: *[_id == "siteSettings"][0]{    homePage->{      content[] {        ...,      }    }  }
+export type HomePageQueryResult = {
+  homePage: null;
+} | {
+  homePage: {
+    content: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+      listItem?: "bullet" | "number";
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    } | {
+      _key: string;
+      _type: "hero";
+      title?: string;
+      description?: string;
+      image?: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      };
+      buttons?: Array<{
+        _key: string;
+      } & Button>;
+    } | {
+      _key: string;
+      _type: "section";
+      title?: string;
+      content?: Array<{
+        _key: string;
+      } & Button | {
+        _key: string;
+      } & Checklist | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }>;
+    }> | null;
+  } | null;
 } | null;
 
 // Query TypeMap
@@ -255,6 +424,7 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     "\n  *[_type == \"page\"] {\n    _id,\n    _type,\n    title,\n    slug,\n    content\n  }\n": PagesQueryResult;
-    "\n  *[_type == \"page\" && slug.current == $slug][0] {\n    _id,\n    _type,\n    title,\n    slug,\n    content\n  }\n": PageQueryResult;
+    "\n    *[_type == \"page\" && slug.current == $slug][0] {\n    _id,\n    _type,\n    title,\n    slug,\n    content[] {\n      ...,\n      _type == \"hero\" => {\n        ...,\n        image {\n          ...,\n          asset-> {\n            metadata {\n              dimensions\n            }\n          }\n        }\n      },\n      _type == \"section\" => {\n        ...\n      }\n    }\n  }\n": PageQueryResult;
+    "\n  *[_id == \"siteSettings\"][0]{\n    homePage->{\n      content[] {\n        ...,\n      }\n    }\n  }\n": HomePageQueryResult;
   }
 }

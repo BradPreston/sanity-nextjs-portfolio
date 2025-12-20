@@ -25,4 +25,7 @@ export default defineConfig({
     // https://www.sanity.io/docs/the-vision-plugin
     visionTool({defaultApiVersion: apiVersion}),
   ],
+  document: {
+    newDocumentOptions: (prev) => prev.filter((item) => item.templateId !== "siteSettings"),
+  },
 })

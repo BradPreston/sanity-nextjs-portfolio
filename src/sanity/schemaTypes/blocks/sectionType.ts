@@ -1,22 +1,14 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
-export const pageType = defineType({
-  name: "page",
-  title: "Page",
-  type: "document",
+export const sectionType = defineType({
+  name: "section",
+  title: "Section",
+  type: "object",
   fields: [
     defineField({
       name: "title",
       title: "Title",
       type: "string",
-    }),
-    defineField({
-      name: "slug",
-      title: "Slug",
-      type: "slug",
-      options: {
-        source: "title",
-      },
     }),
     {
       name: "content",
@@ -24,8 +16,8 @@ export const pageType = defineType({
       type: "array",
       of: [
         defineArrayMember({ type: "block" }),
-        defineArrayMember({ type: "hero" }),
-        defineArrayMember({ type: "section" })
+        defineArrayMember({ type: "checklist" }),
+        defineArrayMember({ type: "button" }),
       ],
     },
   ],

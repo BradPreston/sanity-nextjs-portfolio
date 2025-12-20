@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { Rule, defineField, defineType } from "sanity";
 
 export const button = defineType({
   name: "button",
@@ -9,6 +9,7 @@ export const button = defineType({
       name: "label",
       title: "Label",
       type: "string",
+      validation: (rule: Rule) => rule.required(),
     }),
     defineField({
       name: "url",
@@ -17,6 +18,7 @@ export const button = defineType({
       options: {
         allowRelative: true,
       },
+      validation: (rule: Rule) => rule.required(),
     }),
     defineField({
       name: "variant",
@@ -26,12 +28,14 @@ export const button = defineType({
         list: ["primary", "outline"],
       },
       initialValue: "primary",
+      validation: (rule: Rule) => rule.required(),
     }),
     defineField({
       name: "newTab",
       title: "New Tab",
       type: "boolean",
       initialValue: false,
+      validation: (rule: Rule) => rule.required(),
     })
   ],
 });

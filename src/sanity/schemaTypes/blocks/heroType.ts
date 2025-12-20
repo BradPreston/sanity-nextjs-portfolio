@@ -15,6 +15,7 @@ export const heroType = defineType({
       name: "description",
       title: "Description",
       type: "text",
+      rows: 3,
     }),
     defineField({
       name: "image",
@@ -27,6 +28,6 @@ export const heroType = defineType({
       type: "array",
       of: [defineArrayMember({ type: "button" })],
       validation: (rule: Rule) => rule.max(2),
-    } as any)
+    })
   ],
 });

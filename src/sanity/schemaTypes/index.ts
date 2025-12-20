@@ -2,7 +2,10 @@ import { type SchemaTypeDefinition } from 'sanity'
 import { pageType } from './pageType'
 import { button } from '../objects/button'
 import { heroType } from './blocks/heroType'
+import { siteSettingsType } from './siteSettingsType'
+import { sectionType } from './blocks/sectionType'
+import { checklistType } from './blocks/checklistType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [pageType, heroType, button],
+  types: [pageType, heroType, button, siteSettingsType, sectionType, checklistType],
 }

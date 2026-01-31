@@ -1,25 +1,25 @@
-import { Rule, defineArrayMember, defineField, defineType } from 'sanity';
+import { Rule, defineType } from 'sanity';
 
 export const checklistType = defineType({
 	name: 'checklist',
 	title: 'Checklist',
 	type: 'object',
 	fields: [
-		defineField({
+		{
 			name: 'items',
 			title: 'Items',
 			type: 'array',
 			of: [
-				defineArrayMember({
+				{
 					type: 'object',
 					fields: [
-						defineField({
+						{
 							name: 'title',
 							title: 'Title',
 							type: 'string',
               validation: (rule: Rule) => rule.required(),
-						}),
-						defineField({
+						},
+						{
 							name: 'proficiency',
 							title: 'Proficiency',
 							type: 'string',
@@ -27,7 +27,7 @@ export const checklistType = defineType({
 								list: ['Proficient', 'Familiar']
 							},
               validation: (rule: Rule) => rule.required(),
-						})
+						}
 					],
           preview: {
             select: {
@@ -41,10 +41,10 @@ export const checklistType = defineType({
               };
             }
           }
-				})
+				}
 			],
       validation: (rule: Rule) => rule.required().min(1).max(6),
-		})
+		}
 	],
   preview: {
     prepare() {

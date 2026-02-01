@@ -18,6 +18,11 @@ export const sectionType = defineType({
         { type: "block" },
         { type: "checklist" },
         { type: "button" },
+        { 
+          type: "reference",
+          name: "portfolioReference",
+          to: [{ type: "portfolio" }]
+        }
       ],
     },
   ],

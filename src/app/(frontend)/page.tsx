@@ -1,5 +1,5 @@
 import Hero from "@/components/blocks/hero";
-import Section from "@/components/blocks/section";
+import SectionBlock from "@/components/blocks/section";
 import { sanityFetch } from "@/sanity/lib/live";
 import { homePageQuery } from "@/sanity/lib/queries";
 
@@ -15,7 +15,7 @@ export default async function Page() {
           case "hero":
             return <Hero key={block._key} {...block} />
           case "section":
-            return <Section key={block._key} {...block} />
+            return <SectionBlock key={block._key} {...block} />
           default:
             return null
         }

@@ -30,8 +30,15 @@ export const pageQuery = groq`
         }
       },
       _type == "section" => {
-        ...
-      }
+          ...,
+          content[] {
+            ...,
+            _type == "reference" => @->{
+              ...,
+              tags[]->
+            }
+          }
+        }
     }
   }
 `
@@ -39,8 +46,18 @@ export const pageQuery = groq`
 export const homePageQuery = groq`
   *[_id == "siteSettings"][0]{
     homePage->{
-      content[] {
+      content[]{
         ...,
+        _type == "section" => {
+          ...,
+          content[] {
+            ...,
+            _type == "reference" => @->{
+              ...,
+              tags[]->
+            }
+          }
+        }
       }
     }
   }

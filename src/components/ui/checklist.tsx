@@ -11,7 +11,9 @@ export default function Checklist({ checklist }: { checklist: Checklist }) {
   )
 }
 
-function ChecklistItem({ item }: { item: Checklist['items'][0] }) {
+type ChecklistItem = NonNullable<Checklist['items']>[number]
+
+function ChecklistItem({ item }: { item: ChecklistItem }) {
   return (
     <div className="flex items-center gap-2">
       {item.proficiency === "Proficient" ? (
